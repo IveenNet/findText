@@ -1,0 +1,41 @@
+name: Deploy Blazor to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # O la rama principal que uses
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permite a la acción escribir en el repositorio (para la rama gh-pages)
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      # 1. Publicar la aplicación Blazor WebAssembly
+      - name: Restore, Build, and Publish
+        run: |
+          dotnet restore
+          # Usamos la ruta y nombre de tu proyecto: findText/findText.csproj
+          dotnet publish **findText/findText.csproj** -c Release -o release --nologo
+
+      # 2. Modificar la base tag correctamente para GitHub Pages
+      - name: Change base-tag in index.html
+        run: |
+          # El path debe coincidir con el nombre de tu repositorio en GitHub Pages (ej: username.github.io/findText/)
+          find release/wwwroot -name "index.html" -exec sed -i 's/<base href="\/" \/>/<base href="\/findText\/" \/>/g' {} +
+
+      # 3. Desplegar a la rama gh-pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: **./release/wwwroot** # Aquí se encuentran todos los archivos estáticos de la app
+          publish_branch: gh-pages
