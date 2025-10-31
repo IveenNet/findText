@@ -23,8 +23,7 @@ jobs:
       - name: Restore, Build, and Publish
         run: |
           dotnet restore
-          # Usamos la ruta y nombre de tu proyecto: findText/findText.csproj
-          dotnet publish **findText/findText.csproj** -c Release -o release --nologo
+          dotnet publish findText/findText.csproj -c Release -o release --nologo
 
       # 2. Modificar la base tag correctamente para GitHub Pages
       - name: Change base-tag in index.html
@@ -35,7 +34,7 @@ jobs:
       # 3. Desplegar a la rama gh-pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: **./release/wwwroot** # Aquí se encuentran todos los archivos estáticos de la app
-          publish_branch: gh-pages
+        with: # Esta línea está a nivel de 'uses:'
+          github_token: ${{ secrets.GITHUB_TOKEN }} # <--- Línea 38 (dos espacios respecto a 'with:')
+          publish_dir: ./release/wwwroot # <--- Línea 39 (dos espacios respecto a 'with:')
+          publish_branch: gh-pages # <--- Línea 40 (dos espacios respecto a 'with:')
