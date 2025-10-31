@@ -1,0 +1,15 @@
+﻿@* ResultTextArea.razor *@
+<textarea class="form-control"
+          rows="15"
+          placeholder="@Placeholder"
+          readonly
+          @bind="Content" />
+
+@code {
+    // Parámetro para recibir o mostrar el contenido
+    [Parameter]
+    public string Content { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Placeholder { get; set; } = "Aquí se mostrará el resultado del análisis combinado...";
+}

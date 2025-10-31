@@ -1,7 +1,51 @@
 ﻿@page "/"
+@using findText.Components
+@using findText.Services
+@inject FileContentService ContentService
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
+<p>Carga dos archivos para análisis combinado.</p>
 
-Welcome to your new app.
+<div class="container-fluid">
+
+    @* PRIMERA FILA: Dos tarjetas de archivo (50% cada una) *@
+    <div class="row mb-4">
+
+        <div class="col-md-6">
+            <FileCard Titulo="Archivo 1: Texto a Buscar"
+                      Descripcion="Carga el texto base."
+                      FileNumber="1" />
+        </div>
+
+        <div class="col-md-6">
+            <FileCard Titulo="Archivo 2: Texto de Referencia"
+                      Descripcion="Carga el texto a comparar."
+                      FileNumber="2" />
+        </div>
+
+    </div>
+
+    @* SEGUNDA FILA: Área de texto grande (100% de ancho) *@
+    <div class="row">
+        <div class="col-12">
+            <ResultTextArea Content="@ContentService.GetCombinedContent()" />
+        </div>
+    </div>
+
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Suscribirse al evento del servicio para que la página se actualice cuando cambien los archivos
+        ContentService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        // Es importante desuscribirse para evitar fugas de memoria
+        ContentService.OnChange -= StateHasChanged;
+    }
+}

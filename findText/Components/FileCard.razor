@@ -1,0 +1,66 @@
+﻿@* FileCard.razor - CÓDIGO ACTUALIZADO *@
+@using System.IO
+@using findText.Services
+@inject FileContentService ContentService
+
+<div class="card p-3 h-100">
+    @* h-100 para que ocupen toda la altura disponible *@
+    <div class="card-body">
+        <h5 class="card-title">@Titulo</h5>
+        <p class="card-text">@Descripcion</p>
+
+        <InputFile id="@($"file-input-{FileNumber}")"
+                   accept=".txt, .json"
+                   OnChange="@ManejarSeleccionDeArchivos" />
+
+        @if (!string.IsNullOrEmpty(feedbackMessage))
+        {
+            <p class="text-info mt-2">@feedbackMessage</p>
+        }
+    </div>
+</div>
+
+@code {
+    private string feedbackMessage = string.Empty;
+
+    // Parámetros
+    [Parameter]
+    public string Titulo { get; set; } = "Archivo";
+
+    [Parameter]
+    public string Descripcion { get; set; }
+
+    [Parameter]
+    public int FileNumber { get; set; } // 1 o 2, para indicar qué slot del servicio usar
+
+    private async Task ManejarSeleccionDeArchivos(InputFileChangeEventArgs e)
+    {
+        var archivo = e.File;
+        const long maxFileSize = 1024 * 1024 * 5; // 5 MB
+
+        if (archivo is not null)
+        {
+            feedbackMessage = $"Cargando {archivo.Name}...";
+            StateHasChanged(); // Actualizar el mensaje
+
+            try
+            {
+                using var stream = archivo.OpenReadStream(maxFileSize);
+                using var reader = new StreamReader(stream);
+
+                string content = await reader.ReadToEndAsync();
+
+                // Actualiza el servicio compartido
+                ContentService.SetFileContent(FileNumber, content);
+
+                feedbackMessage = $"Archivo '{archivo.Name}' cargado exitosamente.";
+            }
+            catch (Exception ex)
+            {
+                feedbackMessage = $"Error: {ex.Message}";
+                // Limpiar el contenido en caso de error
+                ContentService.SetFileContent(FileNumber, string.Empty);
+            }
+        }
+    }
+}
