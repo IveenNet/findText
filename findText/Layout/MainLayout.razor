@@ -1,16 +1,71 @@
 ﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+@using findText.Components
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+<main class="flex flex-1 justify-center py-5">
+	<div class="layout-content-container flex flex-col max-w-7xl flex-1 px-4 sm:px-6 lg:px-8">
+		<div class="flex flex-wrap justify-between gap-3 p-4">
+			<p class="text-4xl font-black leading-tight tracking-[-0.033em] text-gray-800 dark:text-white min-w-72">
+				Search Text Within Files
+			</p>
+		</div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+		<!-- Input Section -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+
+			<!-- Step 1: Upload Cases -->
+			<UploadCase Title="Step 1: Upload Your Cases" Description="Drag & drop a .txt file here, or browse. Each case
+			should be separated by a semicolon or a new line." />
+
+			<!-- Step 2: Upload File to Search -->
+			<UploadCase Title="Step 2: Upload the File to Search" Description="Drag & drop the source file here, or browse." />
+		</div>
+
+		<!-- Start Search Button (Appears after file uploads) -->
+		<div class="flex justify-center p-4">
+			<button class="flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-primary text-white text-base font-bold transition-all hover:bg-primary/90 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed">
+				<span class="material-symbols-outlined" data-icon="search">search</span>
+				<span>Start Search</span>
+			</button>
+		</div>
+
+		<!-- Results Section -->
+		<div class="px-4 pb-4">
+			<h2 class="text-2xl font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5 text-gray-800 dark:text-white">
+				Results
+			</h2>
+			<div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/20 p-4 space-y-3 min-h-[200px]">
+				<Result CaseIdentifier="45A-B23C" IsFound="true" />
+
+				<!-- Example Result: Not Found -->
+				<Result CaseIdentifier="45A-B232C" IsFound="false" />
+
+				<!-- Example Result: Found -->
+				<Result CaseIdentifier="45A-B232C" IsFound="true" />
+				<!-- Initial State Example -->
+				<!--
+							<div class="flex items-center justify-center min-h-[200px] text-gray-500 dark:text-gray-400">
+								<p>Your search results will appear here after you upload files.</p>
+							</div>
+							-->
+				<!-- Processing State Example -->
+				<!--
+							<div class="flex items-center justify-center min-h-[200px] text-gray-500 dark:text-gray-400 gap-3">
+								<svg class="animate-spin h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+									<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+									<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+								</svg>
+								<p>Searching...</p>
+							</div>
+							-->
+			</div>
+		</div>
+		<!-- Action Section -->
+		<div class="flex justify-center p-8">
+			<button class="flex items-center justify-center gap-2 rounded-lg h-12 px-8 bg-primary text-white text-base font-bold shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
+					disabled="">
+				<span class="material-symbols-outlined" data-icon="download">download</span>
+				<span>Download Results</span>
+			</button>
+		</div>
+	</div>
+</main>

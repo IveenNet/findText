@@ -1,0 +1,41 @@
+﻿<div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg flex items-center justify-between bg-background-light dark:bg-gray-800">
+
+	<span class="font-mono text-gray-700 dark:text-gray-300">
+		Case ID: @CaseIdentifier
+	</span>
+
+	<span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium @StatusClasses">
+
+		<span class="material-symbols-outlined text-base mr-1"
+			  data-icon="@StatusIcon">
+			@StatusIcon
+		</span>
+
+		@if (IsFound)
+		{
+			@("Found")
+		}
+		else
+		{
+			@("Not Found")
+		}
+	</span>
+</div>
+
+@code {
+	[Parameter]
+	public string CaseIdentifier { get; set; } // Usamos un ID de ejemplo
+
+	[Parameter]
+	public bool IsFound { get; set; } = false;
+
+	// Propiedad calculada para determinar las clases de color
+	private string StatusClasses => IsFound
+		? "bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300"
+		: "bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300";
+
+	// Propiedad calculada para determinar el ícono
+	private string StatusIcon => IsFound
+		? "check_circle"
+		: "cancel";
+}

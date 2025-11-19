@@ -1,0 +1,45 @@
+﻿<div class="flex flex-col items-center gap-6 rounded-xl border-2 border-dashed border-[#dbe0e6] dark:border-gray-700 px-6 py-14 bg-white dark:bg-gray-800/20">
+
+	<div class="flex max-w-[480px] flex-col items-center gap-2">
+		<p class="text-lg font-bold leading-tight tracking-[-0.015em] max-w-[480px] text-center text-gray-800 dark:text-white">
+			@Title
+		</p>
+		<p class="text-sm font-normal leading-normal max-w-[480px] text-center text-gray-600 dark:text-gray-400">
+			@Description
+		</p>
+	</div>
+
+	<div class="relative flex items-center justify-center">
+
+		<label for="file-upload-input" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-150">
+			Select File
+		</label>
+
+		<span class="ml-4 text-sm text-gray-500 dark:text-gray-400">@fileName</span>
+
+		<InputFile OnChange="@HandleFileSelection"
+				   id="file-upload-input"
+				   accept=".txt,.json"
+				   class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public string Title { get; set; } = "Upload Your Cases";
+
+	[Parameter]
+	public string Description { get; set; } = "Each case should be separated by a semicolon or a new line.";
+
+	private string fileName { get; set; } = "No file selected.";
+
+	private void HandleFileSelection(InputFileChangeEventArgs e)
+	{
+		// El Blazor InputFile requiere un método de manejo.
+		var file = e.File;
+		fileName = file.Name;
+
+		// Aquí iría tu lógica para leer el archivo
+		// Console.WriteLine($"Archivo seleccionado: {file.Name}");
+	}
+}
